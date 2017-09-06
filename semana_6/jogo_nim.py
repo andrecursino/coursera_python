@@ -1,94 +1,86 @@
-def campeonato():
-    print('Bem-vindo ao jogo do NIM! Escolha:\n')
-    print('1 - para jogar uma partida isolada')
-    escolha = int(input('2 - para jogar um campeonato'))
-    if escolha == 1:
-        print('Você escolheu jogar uma partida isolada!')
-        partida()
-    else:
-        print('Você escolheu um campeonato!\n')
-        print('**** Rodada 1 ****\n')
-        partida()
-        print('**** Rodada 2 ****\n')
-        partida()
-        print('**** Rodada 3 ****\n')
-        partida()
-        print('**** Final do campeonato! ****\n')
-        print('Placar: Você 0 X 3 Computado')
+def main():
+    tipo_jogo = 0
+    while tipo_jogo == 0:
+        #menu de opcoes
+        print('Bem-vindo ao jogo do NIM! Escolha:\n'
+              '\n'
+              '1 - para jogar uma partida isolada')
+        tipo_jogo = int(input('2 - para jogar um campeonato '))
+        print('')
+        if tipo_jogo == 1:
+            print('Voce escolheu uma partida isolada!')
+            partida()
+            break
+        if tipo_jogo == 2:
+            print('Voce escolheu um campeonato')
+            campeonato()
+            break
+        else:
+            print('Opcao invalida\n')
+            tipo_jogo = 0
 
 
 def partida():
     n = int(input('Quantas pecas? '))
-    m = int(input('Limite de pecas por jogada? '))
-    print('')
-    if n % (m + 1) == 0:
+    m = int(input('Limite de peças por jogada? '))
+
+    vez_do_computador = True
+    if n % (m+1) == 0:
         print('Voce comeca!\n')
-        return usuario_escolhe_jogada(n, m)
+        vez_do_computador = False
     else:
         print('Computador comeca!\n')
-        return computador_escolhe_jogada(n, m)
+
+    while n > 0:
+        if vez_do_computador:
+            jogada = computador_escolhe_jogada(n, m)
+            vez_do_computador = False
+            print('Computador retirou {} pecas.'.format(jogada))
+        else:
+            jogada = usuario_escolhe_jogada(n, m)
+            vez_do_computador = True
+            print('Voce retirou {} pecas.'.format(jogada))
+        n = n - jogada
+        print('Restam apenas {} peças no jogo.\n'.format(n))
+
+    if vez_do_computador:
+        print('Voce ganhou!')
+    else:
+        print('O computador ganhou!')
 
 
 def computador_escolhe_jogada(n, m):
-    a = 1
-    b = True
-    peca_robo = 0
-    while a <= m and b == True:
-        if n % (m + 1) == 0:
-            b = False
-        else:
-            peca_robo = peca_robo + 1
-            a = a + 1
-            n = n - 1
-    print('O computador tirou {} pecas.'.format(peca_robo))
-    if n <= 0:
-        print('Fim do jogo! O computador ganhou!\n')
+    print('Vez do computador')
+    if n <= m:
+        return n
     else:
-        print('Agora restam {} pecas.\n'.format(n))
-        peca_jogador = int(input('Quantas pecas voce vai tirar? '))
-        if peca_jogador > m:
-            print('Oops! Jogada invalida! Tente de novo.\n')
-            return computador_escolhe_jogada(n, m)
-        else:
-            print('Voce tirou {} pecas.'.format(peca_jogador))
-            n = n - peca_jogador  # pecas restantes
-            if n < 0:
-                print('Fim de jogo! Voce ganhou!')
-            else:
-                return computador_escolhe_jogada(n, m)
-
+        quantia = n % (m+1)
+        if quantia > 0:
+            return quantia
+        return m
 
 
 def usuario_escolhe_jogada(n, m):
-    peca_jogador = int(input('Quantas pecas voce vai tirar? '))
-    if peca_jogador > m:
-        print('Oops! Jogada invalida! Tente de novo.\n')
-        return usuario_escolhe_jogada(m, n)
-    else:
-        print('Voce tirou {} pecas.'.format(peca_jogador))
-        n = n - peca_jogador #pecas restantes
-        if n <= 0:
-            print('Fim do jogo! Voce ganhou!')
-        else:
-            print('Agora resta apenas {} pecas '.format(n))
-            a = 1
-            b = True
-            peca_robo = 0
-            while a <= m and b == True:
-                if n % (m + 1) == 0:
-                    b = False
-                else:
-                    peca_robo = peca_robo + 1
-                    a = a + 1
-                    n = n - 1
-            print('O computador tirou {} pecas.'.format(peca_robo))
-            if n > 0:
-                print('Agora restam {} pecas.\n'.format(n))
-                return usuario_escolhe_jogada(n, m)
-            else:
-                print('Fim do jogo! O computador ganhou!\n')
+    print('Sua vez!\n')
+    jogada = 0
+    while jogada == 0:
+        jogada = int(input('Quantas pecas vai tirar? '))
+        if jogada > n or jogada < 1 or jogada > m:
+            print('Ooops! Jogada invalida, tente de novo.')
+            jogada = 0
+    return jogada
 
 
+def campeonato():
+    print('Voce escolheu um campeonato!\n')
+    print('**** Rodada 1 ****\n')
+    partida()
+    print('**** Rodada 2 ****\n')
+    partida()
+    print('**** Rodada 3 ****\n')
+    partida()
+    print('**** Final do campeonato! ****\n')
+    print('Placar: Voce 0 X 3 Computado')
 
 
-print(campeonato())
+print(main())
